@@ -7,41 +7,110 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+/**
+ * Esquema de Cores DARK - Elegante & Luxuoso
+ * Fundo preto profundo com acentos dourados e petróleo
+ */
 private val DarkColorScheme = darkColorScheme(
-    primary = FinoraDarkPrimary,
-    secondary = FinoraSecondary,
-    tertiary = FinoraTertiary,
-    background = FinoraDarkBackground,
-    surface = FinoraDarkSurface,
-    error = FinoraError,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFFE2E8F0),
-    onSurface = Color(0xFFE2E8F0),
-    onError = Color.White
+    // Primary - Dourado para destaque premium
+    primary = AccentGoldDark,
+    onPrimary = DarkBackground,
+    primaryContainer = AccentTealDark,
+    onPrimaryContainer = DarkTextPrimary,
+    
+    // Secondary - Verde esmeralda para ações secundárias
+    secondary = AccentEmeraldDark,
+    onSecondary = DarkBackground,
+    secondaryContainer = DarkSurfaceVariant,
+    onSecondaryContainer = DarkTextPrimary,
+    
+    // Tertiary - Azul petróleo
+    tertiary = AccentTealDark,
+    onTertiary = DarkTextPrimary,
+    tertiaryContainer = DarkSurfaceVariant,
+    onTertiaryContainer = DarkTextPrimary,
+    
+    // Background & Surface
+    background = DarkBackground,
+    onBackground = DarkTextPrimary,
+    surface = DarkSurface,
+    onSurface = DarkTextPrimary,
+    surfaceVariant = DarkSurfaceVariant,
+    onSurfaceVariant = DarkTextSecondary,
+    
+    // Inversed
+    inverseSurface = LightSurface,
+    inverseOnSurface = LightTextPrimary,
+    inversePrimary = AccentGold,
+    
+    // Error
+    error = ErrorDark,
+    onError = DarkTextPrimary,
+    errorContainer = ErrorDark,
+    onErrorContainer = DarkTextPrimary,
+    
+    // Outline & Borders
+    outline = BorderDark,
+    outlineVariant = DarkSurfaceVariant,
+    scrim = OverlayDark
 )
 
+/**
+ * Esquema de Cores LIGHT - Minimalista & Clean
+ * Fundo branco/cinza claro com acentos dourados e petróleo
+ */
 private val LightColorScheme = lightColorScheme(
-    primary = FinoraPrimary,
-    secondary = FinoraSecondary,
-    tertiary = FinoraTertiary,
-    background = FinoraBackground,
-    surface = FinoraSurface,
-    error = FinoraError,
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1E293B),
-    onSurface = Color(0xFF1E293B),
-    onError = Color.White
+    // Primary - Dourado para destaque premium
+    primary = AccentGold,
+    onPrimary = LightTextPrimary,
+    primaryContainer = AccentTeal,
+    onPrimaryContainer = LightSurface,
+    
+    // Secondary - Verde esmeralda para ações secundárias
+    secondary = AccentEmerald,
+    onSecondary = LightSurface,
+    secondaryContainer = LightSurfaceVariant,
+    onSecondaryContainer = LightTextPrimary,
+    
+    // Tertiary - Azul petróleo
+    tertiary = AccentTeal,
+    onTertiary = LightSurface,
+    tertiaryContainer = LightSurfaceVariant,
+    onTertiaryContainer = LightTextPrimary,
+    
+    // Background & Surface
+    background = LightBackground,
+    onBackground = LightTextPrimary,
+    surface = LightSurface,
+    onSurface = LightTextPrimary,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightTextSecondary,
+    
+    // Inversed
+    inverseSurface = DarkSurface,
+    inverseOnSurface = DarkTextPrimary,
+    inversePrimary = AccentGoldDark,
+    
+    // Error
+    error = ErrorLight,
+    onError = LightSurface,
+    errorContainer = ErrorLight,
+    onErrorContainer = LightSurface,
+    
+    // Outline & Borders
+    outline = BorderLight,
+    outlineVariant = LightSurfaceVariant,
+    scrim = OverlayLight
 )
 
+/**
+ * Tema Principal do Finora
+ * Design minimalista e luxuoso com suporte a dark/light mode
+ */
 @Composable
 fun FinoraTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
