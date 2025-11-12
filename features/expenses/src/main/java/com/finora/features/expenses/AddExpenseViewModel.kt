@@ -3,8 +3,12 @@ package com.finora.features.expenses
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finora.core.InputValidator
 import com.finora.core.Logger
 import com.finora.core.Result
+import com.finora.core.ValidationResult
+import com.finora.core.ErrorHandler
+import com.finora.core.AppError
 import com.finora.domain.model.Expense
 import com.finora.domain.model.ExpenseCategory
 import com.finora.domain.model.ReceiptData
@@ -24,7 +28,8 @@ import javax.inject.Inject
 class AddExpenseViewModel @Inject constructor(
     private val scanReceiptUseCase: ScanReceiptUseCase,
     private val saveExpenseUseCase: SaveExpenseUseCase,
-    private val smartCategorizeUseCase: SmartCategorizeUseCase
+    private val smartCategorizeUseCase: SmartCategorizeUseCase,
+    private val errorHandler: ErrorHandler
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(AddExpenseUiState())
@@ -58,6 +63,10 @@ class AddExpenseViewModel @Inject constructor(
                 }
                 is Result.Failure -> {
                     Logger.e("Failed to process receipt: ${result.error.message}")
+                    errorHandler.handleError(
+                        AppError.OcrError("Failed to scan receipt"),
+                        retryAction = { processReceipt(imageUri) }
+                    )
                     _uiState.update {
                         it.copy(
                             isProcessing = false,
@@ -132,21 +141,48 @@ class AddExpenseViewModel @Inject constructor(
     fun saveExpense(onSuccess: () -> Unit) {
         viewModelScope.launch {
             val state = _uiState.value
-            val amountValue = state.amount.toDoubleOrNull()
             
-            if (amountValue == null || amountValue <= 0) {
-                _uiState.update { it.copy(error = "Invalid amount") }
-                return@launch
+            // Validar amount
+            when (val amountValidation = InputValidator.validateAmount(state.amount)) {
+                is ValidationResult.Error -> {
+                    _uiState.update { it.copy(error = amountValidation.message) }
+                    return@launch
+                }
+                ValidationResult.Success -> {}
             }
             
+            val amountValue = state.amount.toDoubleOrNull()!!
+            
+            // Validar description (se não tiver merchant)
             val description = state.description.ifBlank { 
-                state.merchant.ifBlank { "Expense" }
+                state.merchant.ifBlank { null }
+            }
+            
+            if (description != null) {
+                when (val descValidation = InputValidator.validateDescription(description)) {
+                    is ValidationResult.Error -> {
+                        _uiState.update { it.copy(error = descValidation.message) }
+                        return@launch
+                    }
+                    ValidationResult.Success -> {}
+                }
+            }
+            
+            // Validar merchant (opcional)
+            if (state.merchant.isNotBlank()) {
+                when (val merchantValidation = InputValidator.validateMerchant(state.merchant)) {
+                    is ValidationResult.Error -> {
+                        _uiState.update { it.copy(error = merchantValidation.message) }
+                        return@launch
+                    }
+                    ValidationResult.Success -> {}
+                }
             }
             
             val expense = Expense(
                 amount = amountValue,
                 category = state.category,
-                description = description,
+                description = description ?: "Expense",
                 date = state.date,
                 merchant = state.merchant.ifBlank { null },
                 receiptImagePath = state.capturedImageUri?.toString(),
@@ -163,6 +199,10 @@ class AddExpenseViewModel @Inject constructor(
                 }
                 is Result.Failure -> {
                     Logger.e("Failed to save expense: ${result.error.message}")
+                    errorHandler.handleError(
+                        AppError.DatabaseError("Failed to save expense"),
+                        retryAction = { saveExpense(onSuccess) }
+                    )
                     _uiState.update {
                         it.copy(
                             isSaving = false,

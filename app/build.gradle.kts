@@ -4,6 +4,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    // Firebase plugins comentados - descomentar após adicionar google-services.json
+    // id("com.google.gms.google-services")
+    // id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -96,6 +99,11 @@ dependencies {
     
     // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+    
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
     
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")

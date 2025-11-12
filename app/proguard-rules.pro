@@ -33,3 +33,15 @@
 # ML Kit
 -keep class com.google.mlkit.** { *; }
 -keep class com.google.android.gms.** { *; }
+
+# Firebase
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
+
+# Compose
+-keep class androidx.compose.** { *; }
+-keep class kotlin.Metadata { *; }
+
+# Retrofit/OkHttp (if added later)
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
