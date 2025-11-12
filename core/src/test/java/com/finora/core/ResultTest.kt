@@ -44,8 +44,8 @@ class ResultTest {
     
     @Test
     fun `flatMap chains operations`() {
-        val result = Result.Success(10)
-        val chained = result.flatMap { value ->
+        val result: Result<Int, AppError> = Result.Success(10)
+        val chained = result.flatMap<Int> { value ->
             if (value > 5) Result.Success(value * 2)
             else Result.Failure(AppError.ValidationError("Too small"))
         }

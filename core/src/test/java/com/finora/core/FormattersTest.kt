@@ -14,19 +14,19 @@ class FormattersTest {
     @Test
     fun `CurrencyFormatter parses valid amount`() {
         val amount = CurrencyFormatter.parse("$123.45")
-        assertEquals(123.45, amount, 0.01)
+        assertEquals(123.45, amount ?: 0.0, 0.01)
     }
     
     @Test
     fun `CurrencyFormatter parses amount with comma`() {
         val amount = CurrencyFormatter.parse("123,45")
-        assertEquals(123.45, amount, 0.01)
+        assertEquals(123.45, amount ?: 0.0, 0.01)
     }
     
     @Test
     fun `CurrencyFormatter parses plain number`() {
         val amount = CurrencyFormatter.parse("99.99")
-        assertEquals(99.99, amount, 0.01)
+        assertEquals(99.99, amount ?: 0.0, 0.01)
     }
     
     @Test

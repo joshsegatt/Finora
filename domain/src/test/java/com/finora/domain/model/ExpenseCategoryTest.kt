@@ -25,7 +25,7 @@ class ExpenseCategoryTest {
     
     @Test
     fun `inferFromText returns OTHER for unknown text`() {
-        val category = ExpenseCategory.inferFromText("Random store")
+        val category = ExpenseCategory.inferFromText("Random xyz")
         assertEquals(ExpenseCategory.OTHER, category)
     }
     

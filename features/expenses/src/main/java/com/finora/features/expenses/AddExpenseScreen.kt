@@ -144,6 +144,43 @@ fun AddExpenseScreen(
                     enabled = !uiState.isProcessing
                 )
                 
+                // Botão OPCIONAL para sugestão de categoria
+                if (uiState.description.isNotBlank() || uiState.merchant.isNotBlank()) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedButton(
+                            onClick = viewModel::suggestCategory,
+                            enabled = !uiState.isProcessing && !uiState.isSuggestingCategory,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            if (uiState.isSuggestingCategory) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(Modifier.width(8.dp))
+                            } else {
+                                Icon(Icons.Default.AutoAwesome, null, Modifier.size(16.dp))
+                                Spacer(Modifier.width(8.dp))
+                            }
+                            Text("Sugerir Categoria")
+                        }
+                        
+                        uiState.categorySuggestion?.let { suggestion ->
+                            Text(
+                                text = "${(suggestion.confidence * 100).toInt()}%",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = if (suggestion.confidence > 0.7f) 
+                                    MaterialTheme.colorScheme.primary 
+                                else 
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+                
                 OutlinedTextField(
                     value = uiState.merchant,
                     onValueChange = viewModel::onMerchantChanged,

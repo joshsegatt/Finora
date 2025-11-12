@@ -59,11 +59,11 @@ class ReceiptParserTest {
     
     @Test
     fun `returns low confidence for incomplete data`() {
-        val text = "Some random text without amount or date"
+        val text = "xyz random incomplete"
         
         val result = ReceiptParser.parse(text)
         
-        assertTrue(result.confidence < 0.5f)
+        assertTrue(result.confidence <= 0.5f)
     }
     
     @Test

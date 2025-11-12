@@ -10,6 +10,7 @@ import com.finora.domain.model.ExpenseCategory
 import com.finora.domain.model.ReceiptData
 import com.finora.domain.usecase.ScanReceiptUseCase
 import com.finora.domain.usecase.SaveExpenseUseCase
+import com.finora.ml.SmartCategorizeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddExpenseViewModel @Inject constructor(
     private val scanReceiptUseCase: ScanReceiptUseCase,
-    private val saveExpenseUseCase: SaveExpenseUseCase
+    private val saveExpenseUseCase: SaveExpenseUseCase,
+    private val smartCategorizeUseCase: SmartCategorizeUseCase
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(AddExpenseUiState())
@@ -91,6 +93,42 @@ class AddExpenseViewModel @Inject constructor(
         _uiState.update { it.copy(notes = notes) }
     }
     
+    fun suggestCategory() {
+        viewModelScope.launch {
+            val state = _uiState.value
+            val description = state.description.ifBlank { state.merchant }
+            
+            if (description.isBlank()) {
+                return@launch
+            }
+            
+            _uiState.update { it.copy(isSuggestingCategory = true) }
+            
+            when (val result = smartCategorizeUseCase(
+                SmartCategorizeUseCase.Params(
+                    description = description,
+                    merchant = state.merchant.ifBlank { null }
+                )
+            )) {
+                is Result.Success -> {
+                    val suggestion = result.data
+                    Logger.d("Category suggested: ${suggestion.category} (confidence: ${suggestion.confidence})")
+                    _uiState.update {
+                        it.copy(
+                            category = suggestion.category,
+                            isSuggestingCategory = false,
+                            categorySuggestion = suggestion
+                        )
+                    }
+                }
+                is Result.Failure -> {
+                    Logger.e("Failed to suggest category: ${result.error.message}")
+                    _uiState.update { it.copy(isSuggestingCategory = false) }
+                }
+            }
+        }
+    }
+    
     fun saveExpense(onSuccess: () -> Unit) {
         viewModelScope.launch {
             val state = _uiState.value
@@ -145,7 +183,9 @@ data class AddExpenseUiState(
     val capturedImageUri: Uri? = null,
     val isProcessing: Boolean = false,
     val isSaving: Boolean = false,
+    val isSuggestingCategory: Boolean = false,
     val receiptData: ReceiptData? = null,
+    val categorySuggestion: SmartCategorizeUseCase.CategorySuggestion? = null,
     val amount: String = "",
     val category: ExpenseCategory = ExpenseCategory.OTHER,
     val merchant: String = "",
