@@ -26,6 +26,17 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            // TODO: Configure com suas credenciais locais
+            // Veja KEYSTORE-INFO-PRIVATE.md (NÃO COMMITAR!)
+            storeFile = file("../finora-release.keystore")
+            storePassword = System.getenv("FINORA_STORE_PASSWORD") ?: "@Guga1010"
+            keyAlias = "finora"
+            keyPassword = System.getenv("FINORA_KEY_PASSWORD") ?: "@Guga1010"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -34,7 +45,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isMinifyEnabled = false

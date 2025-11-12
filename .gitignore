@@ -10,6 +10,12 @@
 # Java class files
 *.class
 
+# Keystore e senhas (NUNCA COMMITAR!)
+*.keystore
+*.jks
+KEYSTORE-INFO-PRIVATE.md
+generate-keystore.ps1
+
 # Generated files
 bin/
 gen/
