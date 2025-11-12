@@ -29,6 +29,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.finora.core.CurrencyFormatter
 import com.finora.domain.model.CategoryStats
 import com.finora.domain.model.ReportPeriod
+import com.finora.ui.theme.AnimatedBarChart
+import com.finora.ui.theme.Finora3DPeriodTab
 import com.finora.ui.theme.getColor
 import java.io.File
 import kotlin.math.cos
@@ -108,6 +110,20 @@ fun ReportsScreen(
                         SummaryCard(
                             totalAmount = uiState.report!!.totalAmount,
                             expenseCount = uiState.report!!.expenseCount
+                        )
+                    }
+                    
+                    // BarChart animado com dados temporais (sempre visível)
+                    item {
+                        AnimatedBarChart(
+                            data = uiState.trendData,
+                            maxBars = when (uiState.selectedPeriod) {
+                                ReportPeriod.DAILY -> 24 // Horas
+                                ReportPeriod.WEEKLY -> 7 // Dias
+                                ReportPeriod.MONTHLY -> 30 // Dias
+                                ReportPeriod.YEARLY -> 12 // Meses
+                                else -> 7
+                            }
                         )
                     }
                     
@@ -212,7 +228,7 @@ fun PeriodSelector(
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         listOf(
             ReportPeriod.DAILY,
@@ -220,10 +236,10 @@ fun PeriodSelector(
             ReportPeriod.MONTHLY,
             ReportPeriod.YEARLY
         ).forEach { period ->
-            FilterChip(
+            Finora3DPeriodTab(
+                label = period.displayName,
                 selected = selectedPeriod == period,
                 onClick = { onPeriodSelected(period) },
-                label = { Text(period.displayName) },
                 modifier = Modifier.weight(1f)
             )
         }

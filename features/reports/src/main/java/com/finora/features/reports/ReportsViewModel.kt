@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,10 +35,12 @@ class ReportsViewModel @Inject constructor(
             when (val result = generateReportUseCase(GenerateReportUseCase.Params(period))) {
                 is Result.Success -> {
                     Logger.d("Report generated successfully")
+                    val trendData = generateTrendData(result.data, period)
                     _uiState.update {
                         it.copy(
                             isLoading = false,
                             report = result.data,
+                            trendData = trendData,
                             error = null
                         )
                     }
@@ -52,6 +55,22 @@ class ReportsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+    
+    private fun generateTrendData(report: ExpenseReport, period: ReportPeriod): List<Pair<String, Double>> {
+        val calendar = Calendar.getInstance()
+        val dateFormat = when (period) {
+            ReportPeriod.DAILY -> java.text.SimpleDateFormat("HH:mm", Locale.getDefault())
+            ReportPeriod.WEEKLY -> java.text.SimpleDateFormat("EEE", Locale.getDefault()) // Mon, Tue, Wed
+            ReportPeriod.MONTHLY -> java.text.SimpleDateFormat("dd", Locale.getDefault()) // 1, 2, 3...
+            ReportPeriod.YEARLY -> java.text.SimpleDateFormat("MMM", Locale.getDefault()) // Jan, Feb, Mar
+            else -> java.text.SimpleDateFormat("dd/MM", Locale.getDefault())
+        }
+        
+        return report.dailyTrend.map { dailyExpense ->
+            val label = dateFormat.format(dailyExpense.date)
+            label to dailyExpense.totalAmount
         }
     }
     
@@ -110,5 +129,6 @@ data class ReportsUiState(
     val isLoading: Boolean = false,
     val report: ExpenseReport? = null,
     val selectedPeriod: ReportPeriod = ReportPeriod.MONTHLY,
-    val error: String? = null
+    val error: String? = null,
+    val trendData: List<Pair<String, Double>> = emptyList() // Dados para o BarChart
 )

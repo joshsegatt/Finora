@@ -5,39 +5,88 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     
-    <!-- Background - Deep Blue -->
+    <!-- Background - Deep Blue Gradient -->
     <path
         android:fillColor="#1A237E"
         android:pathData="M0,0h108v108h-108z" />
     
-    <!-- Gold coin circle -->
+    <!-- Shadow behind coin -->
+    <path
+        android:fillColor="#000000"
+        android:fillAlpha="0.2"
+        android:pathData="M54,82 A26,26 0 1,1 54,30 A26,26 0 1,1 54,82z"/>
+    
+    <!-- Left Wing - Base -->
+    <path
+        android:fillColor="#FFA726"
+        android:pathData="M36,54 Q24,50 18,46 Q16,45 16,47 L16,53 Q16,55 18,54 Q24,52 32,54 Q34,54.5 36,54z"/>
+    
+    <!-- Left Wing - Top Feather -->
+    <path
+        android:fillColor="#FFB74D"
+        android:pathData="M34,50 Q26,47 20,44 Q18,43 18,45 L18,49 Q18,50 20,49 Q26,48 32,50.5 Q33,51 34,50z"/>
+    
+    <!-- Left Wing - Bottom Feather -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M34,58 Q26,59 20,60 Q18,60.5 18,58 L18,54 Q18,53 20,54 Q26,56 32,57.5 Q33,58 34,58z"/>
+    
+    <!-- Right Wing - Base -->
+    <path
+        android:fillColor="#FFA726"
+        android:pathData="M72,54 Q84,50 90,46 Q92,45 92,47 L92,53 Q92,55 90,54 Q84,52 76,54 Q74,54.5 72,54z"/>
+    
+    <!-- Right Wing - Top Feather -->
+    <path
+        android:fillColor="#FFB74D"
+        android:pathData="M74,50 Q82,47 88,44 Q90,43 90,45 L90,49 Q90,50 88,49 Q82,48 76,50.5 Q75,51 74,50z"/>
+    
+    <!-- Right Wing - Bottom Feather -->
+    <path
+        android:fillColor="#FF9800"
+        android:pathData="M74,58 Q82,59 88,60 Q90,60.5 90,58 L90,54 Q90,53 88,54 Q82,56 76,57.5 Q75,58 74,58z"/>
+    
+    <!-- Coin Outer Ring (Gold) -->
     <path
         android:fillColor="#FFD700"
-        android:pathData="M54,30 A24,24 0 1,1 54,78 A24,24 0 1,1 54,30z"/>
+        android:pathData="M54,29 A25,25 0 1,1 54,79 A25,25 0 1,1 54,29z"/>
     
-    <!-- Inner coin depth -->
+    <!-- Coin Middle Ring (Amber) -->
     <path
         android:fillColor="#FFC107"
-        android:pathData="M54,34 A20,20 0 1,1 54,74 A20,20 0 1,1 54,34z"/>
+        android:pathData="M54,33 A21,21 0 1,1 54,75 A21,21 0 1,1 54,33z"/>
     
-    <!-- Pound Sterling symbol (£) -->
+    <!-- Coin Inner Face (Light Gold) -->
+    <path
+        android:fillColor="#FFECB3"
+        android:pathData="M54,37 A17,17 0 1,1 54,71 A17,17 0 1,1 54,37z"/>
+    
+    <!-- Pound Sterling Symbol (£) - Deep Blue -->
     <path
         android:fillColor="#1A237E"
-        android:strokeWidth="2.5"
-        android:strokeColor="#1A237E"
-        android:pathData="M48,46 Q48,42 50,39 Q52,36 56,39 M44,54 L58,54 M44,62 L60,62 L60,65 L44,65z"/>
+        android:pathData="M48,48 Q48,44 50,41 Q52,38 56,41 C57,42 57,43 56,44 Q54,46 54,48 L54,52 L46,52 L46,54 L54,54 L54,60 C54,62 55,63 57,63 L60,63 L60,61 L57,61 C56,61 56,60.5 56,60 L56,54 L60,54 L60,52 L56,52 L56,48 C56,46 57,45 58,44 L60,44 L60,42 L58,42 C55,42 54,43 54,45 Q54,46 54,48 L48,48z"/>
     
-    <!-- Rising graph accent (left) -->
+    <!-- Coin Highlight (3D Effect) -->
     <path
-        android:strokeColor="#FFD700"
-        android:strokeWidth="2"
-        android:strokeLineCap="round"
-        android:pathData="M32,66 L36,62 L40,64 L44,58"/>
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.4"
+        android:pathData="M60,42 A15,15 0 0,1 65,54 Q65,48 62,44 Q61,42 60,42z"/>
     
-    <!-- Rising graph accent (right) -->
+    <!-- Coin Shadow (Inner 3D) -->
     <path
-        android:strokeColor="#FFD700"
-        android:strokeWidth="2"
+        android:fillColor="#000000"
+        android:fillAlpha="0.15"
+        android:pathData="M48,66 A15,15 0 0,1 43,54 Q43,60 46,64 Q47,66 48,66z"/>
+    
+    <!-- Wing Highlights -->
+    <path
+        android:strokeColor="#FFECB3"
+        android:strokeWidth="1"
         android:strokeLineCap="round"
-        android:pathData="M64,46 L68,42 L72,44"/>
+        android:pathData="M22,48 L24,50"/>
+    <path
+        android:strokeColor="#FFECB3"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:pathData="M86,48 L84,50"/>
 </vector>

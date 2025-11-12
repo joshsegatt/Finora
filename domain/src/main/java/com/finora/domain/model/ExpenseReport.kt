@@ -26,9 +26,9 @@ data class DailyExpense(
 
 enum class ReportPeriod(val displayName: String) {
     DAILY("Today"),
-    WEEKLY("This Week"),
-    MONTHLY("This Month"),
-    YEARLY("This Year"),
+    WEEKLY("Week"),
+    MONTHLY("Month"),
+    YEARLY("Year"),
     ALL_TIME("All Time"),
     CUSTOM("Custom Range")
 }

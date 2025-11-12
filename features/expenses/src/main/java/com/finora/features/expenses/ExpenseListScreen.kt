@@ -169,25 +169,20 @@ fun CategoryFilterRow(
         ),
         horizontalArrangement = Arrangement.spacedBy(FinoraSpacing.small)
     ) {
+        // Chip 3D "All"
         item {
-            FilterChip(
+            Finora3DFilterChip(
+                label = "All",
                 selected = selectedCategory == null,
-                onClick = { onCategorySelected(null) },
-                label = { Text("All") },
-                shape = FinoraShapes.pill,
-                colors = FilterChipDefaults.filterChipColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    selectedContainerColor = MaterialTheme.colorScheme.primary,
-                    labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    selectedLabelColor = MaterialTheme.colorScheme.onPrimary
-                )
+                onClick = { onCategorySelected(null) }
             )
         }
         
+        // Chips 3D para cada categoria
         items(ExpenseCategory.entries) { category ->
-            FinoraCategoryChip(
+            Finora3DFilterChip(
                 label = category.displayName,
-                color = category.getColor(),
+                selected = selectedCategory == category,
                 onClick = { onCategorySelected(category) }
             )
         }
