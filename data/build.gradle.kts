@@ -61,6 +61,9 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
     
+    // DataStore for preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    
     // ML Kit Text Recognition
     implementation("com.google.mlkit:text-recognition:16.0.1")
     

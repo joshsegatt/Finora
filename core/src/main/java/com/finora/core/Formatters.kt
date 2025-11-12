@@ -25,10 +25,20 @@ object DateFormatter {
     }
 }
 
+/**
+ * CurrencyFormatter - Legacy version using currency codes.
+ * For dynamic currency support, use Currency.format() from domain layer.
+ */
 object CurrencyFormatter {
-    fun format(amount: Double, currencyCode: String = "USD"): String {
+    fun format(amount: Double, currencyCode: String = "GBP"): String {
         return try {
-            val format = NumberFormat.getCurrencyInstance()
+            val format = NumberFormat.getCurrencyInstance(
+                when (currencyCode) {
+                    "EUR" -> Locale.GERMANY
+                    "GBP" -> Locale.UK
+                    else -> Locale.UK
+                }
+            )
             format.currency = Currency.getInstance(currencyCode)
             format.format(amount)
         } catch (e: Exception) {

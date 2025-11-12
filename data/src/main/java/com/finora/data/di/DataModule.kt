@@ -12,10 +12,14 @@ import com.finora.data.repository.BudgetRepositoryImpl
 import com.finora.data.repository.ExpenseRepositoryImpl
 import com.finora.data.repository.NotificationRepositoryImpl
 import com.finora.data.repository.OcrRepositoryImpl
+import com.finora.data.repository.SubscriptionRepositoryImpl
+import com.finora.data.repository.UserPreferencesRepositoryImpl
 import com.finora.domain.repository.BudgetRepository
 import com.finora.domain.repository.ExpenseRepository
 import com.finora.domain.repository.NotificationRepository
 import com.finora.domain.repository.OcrRepository
+import com.finora.domain.repository.SubscriptionRepository
+import com.finora.domain.repository.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,6 +86,22 @@ object DataModule {
         notificationDao: NotificationDao
     ): NotificationRepository {
         return NotificationRepositoryImpl(notificationDao)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideUserPreferencesRepository(
+        @ApplicationContext context: Context
+    ): UserPreferencesRepository {
+        return UserPreferencesRepositoryImpl(context)
+    }
+    
+    @Provides
+    @Singleton
+    fun provideSubscriptionRepository(
+        @ApplicationContext context: Context
+    ): SubscriptionRepository {
+        return SubscriptionRepositoryImpl(context)
     }
     
     @Provides
