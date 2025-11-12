@@ -85,6 +85,16 @@ class ExpenseRepositoryImpl @Inject constructor(
         }
     }
     
+    override fun getExpensesByCategoryAndDateRange(
+        category: String,
+        startDate: Date,
+        endDate: Date
+    ): Flow<List<Expense>> {
+        return expenseDao.getExpensesByCategoryAndDateRange(category, startDate, endDate).map { entities ->
+            entities.toDomain()
+        }
+    }
+    
     override suspend fun searchExpenses(query: String): Result<List<Expense>, AppError> {
         return try {
             val entities = expenseDao.searchExpenses(query)

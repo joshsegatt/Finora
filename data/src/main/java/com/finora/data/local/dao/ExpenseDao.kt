@@ -34,6 +34,18 @@ interface ExpenseDao {
     
     @Query("""
         SELECT * FROM expenses 
+        WHERE category = :category 
+        AND date BETWEEN :startDate AND :endDate 
+        ORDER BY date DESC
+    """)
+    fun getExpensesByCategoryAndDateRange(
+        category: String,
+        startDate: Date,
+        endDate: Date
+    ): Flow<List<ExpenseEntity>>
+    
+    @Query("""
+        SELECT * FROM expenses 
         WHERE description LIKE '%' || :query || '%' 
         OR merchant LIKE '%' || :query || '%' 
         OR notes LIKE '%' || :query || '%'

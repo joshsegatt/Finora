@@ -23,6 +23,12 @@ interface ExpenseRepository {
     
     fun getExpensesByDateRange(startDate: Date, endDate: Date): Flow<List<Expense>>
     
+    fun getExpensesByCategoryAndDateRange(
+        category: String,
+        startDate: Date,
+        endDate: Date
+    ): Flow<List<Expense>>
+    
     suspend fun searchExpenses(query: String): Result<List<Expense>, AppError>
     
     suspend fun getTotalExpenses(): Result<Double, AppError>
