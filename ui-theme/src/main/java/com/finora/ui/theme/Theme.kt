@@ -12,24 +12,24 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 /**
- * Esquema de Cores DARK - Elegante & Luxuoso
- * Fundo preto profundo com acentos dourados e petróleo
+ * Esquema de Cores DARK - Deep Blue + Gold
+ * Fundo Deep Blue profundo com acentos dourados
  */
 private val DarkColorScheme = darkColorScheme(
-    // Primary - Dourado para destaque premium
-    primary = AccentGoldDark,
-    onPrimary = DarkBackground,
-    primaryContainer = AccentTealDark,
-    onPrimaryContainer = DarkTextPrimary,
+    // Primary - Deep Blue
+    primary = DeepBlue,
+    onPrimary = DarkTextPrimary,
+    primaryContainer = DarkBlue,
+    onPrimaryContainer = AccentGoldDark,
     
-    // Secondary - Verde esmeralda para ações secundárias
-    secondary = AccentEmeraldDark,
+    // Secondary - Gold para destaque
+    secondary = AccentGoldDark,
     onSecondary = DarkBackground,
     secondaryContainer = DarkSurfaceVariant,
     onSecondaryContainer = DarkTextPrimary,
     
-    // Tertiary - Azul petróleo
-    tertiary = AccentTealDark,
+    // Tertiary - Verde esmeralda
+    tertiary = AccentEmeraldDark,
     onTertiary = DarkTextPrimary,
     tertiaryContainer = DarkSurfaceVariant,
     onTertiaryContainer = DarkTextPrimary,
@@ -45,7 +45,7 @@ private val DarkColorScheme = darkColorScheme(
     // Inversed
     inverseSurface = LightSurface,
     inverseOnSurface = LightTextPrimary,
-    inversePrimary = AccentGold,
+    inversePrimary = DeepBlue,
     
     // Error
     error = ErrorDark,
@@ -60,24 +60,24 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 /**
- * Esquema de Cores LIGHT - Minimalista & Clean
- * Fundo branco/cinza claro com acentos dourados e petróleo
+ * Esquema de Cores LIGHT - Minimalista Luxo
+ * Fundo branco puro com Deep Blue e Gold
  */
 private val LightColorScheme = lightColorScheme(
-    // Primary - Dourado para destaque premium
-    primary = AccentGold,
-    onPrimary = LightTextPrimary,
-    primaryContainer = AccentTeal,
-    onPrimaryContainer = LightSurface,
+    // Primary - Deep Blue
+    primary = DeepBlue,
+    onPrimary = LightSurface,
+    primaryContainer = LightGold,
+    onPrimaryContainer = DeepBlue,
     
-    // Secondary - Verde esmeralda para ações secundárias
-    secondary = AccentEmerald,
-    onSecondary = LightSurface,
+    // Secondary - Gold para destaque premium
+    secondary = Gold,
+    onSecondary = DarkBlue,
     secondaryContainer = LightSurfaceVariant,
     onSecondaryContainer = LightTextPrimary,
     
-    // Tertiary - Azul petróleo
-    tertiary = AccentTeal,
+    // Tertiary - Verde esmeralda
+    tertiary = AccentEmerald,
     onTertiary = LightSurface,
     tertiaryContainer = LightSurfaceVariant,
     onTertiaryContainer = LightTextPrimary,

@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    
+    <!-- Gold coin circle -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M60,30 A30,30 0 1,1 60,90 A30,30 0 1,1 60,30z"/>
+    
+    <!-- Inner coin depth -->
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M60,35 A25,25 0 1,1 60,85 A25,25 0 1,1 60,35z"/>
+    
+    <!-- Pound Sterling symbol (£) - larger for splash -->
+    <path
+        android:fillColor="#1A237E"
+        android:strokeWidth="3"
+        android:strokeColor="#1A237E"
+        android:pathData="M52,52 Q52,46 55,42 Q58,38 64,42 M46,60 L68,60 M46,72 L72,72 L72,76 L46,76z"/>
+</vector>

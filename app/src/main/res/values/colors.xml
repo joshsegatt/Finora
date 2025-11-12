@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Minimalista Luxo - Deep Blue + Gold -->
+    <color name="deep_blue">#1A237E</color>
+    <color name="gold">#FFD700</color>
+    <color name="light_gold">#FFE082</color>
+    <color name="dark_blue">#0D1642</color>
+    
+    <!-- Backgrounds -->
+    <color name="white">#FFFFFF</color>
+    <color name="light_gray">#F5F5F5</color>
+    
+    <!-- Semantic -->
+    <color name="error">#DC2626</color>
+    <color name="success">#059669</color>
+</resources>

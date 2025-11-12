@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Main Theme -->
     <style name="Theme.Finora" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+    
+    <!-- Splash Screen Theme - Deep Blue + Gold -->
+    <style name="Theme.Finora.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/deep_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimationDuration">500</item>
+        <item name="postSplashScreenTheme">@style/Theme.Finora</item>
     </style>
 </resources>

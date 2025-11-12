@@ -4,20 +4,40 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
+    
+    <!-- Background - Deep Blue -->
     <path
-        android:fillColor="#6366F1"
+        android:fillColor="#1A237E"
         android:pathData="M0,0h108v108h-108z" />
+    
+    <!-- Gold coin circle -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,34 L54,74 M34,54 L74,54"
-        android:strokeWidth="8"
-        android:strokeLineCap="round" />
+        android:fillColor="#FFD700"
+        android:pathData="M54,30 A24,24 0 1,1 54,78 A24,24 0 1,1 54,30z"/>
+    
+    <!-- Inner coin depth -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M40,40 L68,40 L68,68 L40,68 Z"
-        android:strokeWidth="6"
+        android:fillColor="#FFC107"
+        android:pathData="M54,34 A20,20 0 1,1 54,74 A20,20 0 1,1 54,34z"/>
+    
+    <!-- Pound Sterling symbol (£) -->
+    <path
+        android:fillColor="#1A237E"
+        android:strokeWidth="2.5"
+        android:strokeColor="#1A237E"
+        android:pathData="M48,46 Q48,42 50,39 Q52,36 56,39 M44,54 L58,54 M44,62 L60,62 L60,65 L44,65z"/>
+    
+    <!-- Rising graph accent (left) -->
+    <path
+        android:strokeColor="#FFD700"
+        android:strokeWidth="2"
         android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:fillAlpha="0"
-        android:strokeColor="#FFFFFF" />
+        android:pathData="M32,66 L36,62 L40,64 L44,58"/>
+    
+    <!-- Rising graph accent (right) -->
+    <path
+        android:strokeColor="#FFD700"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M64,46 L68,42 L72,44"/>
 </vector>
