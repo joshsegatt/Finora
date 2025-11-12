@@ -6,8 +6,6 @@ import com.finora.data.local.dao.BudgetDao
 import com.finora.data.local.dao.ExpenseDao
 import com.finora.data.local.dao.NotificationDao
 import com.finora.data.local.database.FinoraDatabase
-import com.finora.data.local.database.MIGRATION_1_2
-import com.finora.data.local.database.MIGRATION_2_3
 import com.finora.data.repository.BudgetRepositoryImpl
 import com.finora.data.repository.ExpenseRepositoryImpl
 import com.finora.data.repository.NotificationRepositoryImpl
@@ -41,7 +39,10 @@ object DataModule {
             FinoraDatabase::class.java,
             FinoraDatabase.DATABASE_NAME
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(
+                FinoraDatabase.MIGRATION_1_2,
+                FinoraDatabase.MIGRATION_2_3
+            )
             .fallbackToDestructiveMigration()
             .build()
     }
