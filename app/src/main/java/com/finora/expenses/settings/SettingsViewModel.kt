@@ -1,7 +1,9 @@
 package com.finora.expenses.settings
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -52,16 +54,31 @@ class SettingsViewModel @Inject constructor(
         }
     }
     
-    fun importFromCsv() {
+    fun importFromCsv(context: Context, uri: Uri, onSuccess: (Int) -> Unit) {
         viewModelScope.launch {
-            val downloadsDir = File(app.getExternalFilesDir(null), "exports")
-            val files = downloadsDir.listFiles()?.filter { it.extension == "csv" }
-            
-            files?.firstOrNull()?.let { file ->
-                when (val result = importExpensesFromCsvUseCase(ImportExpensesFromCsvUseCase.Params(file))) {
-                    is Result.Success -> Logger.d("Imported ${result.data} expenses")
-                    is Result.Failure -> Logger.e("Import failed: ${result.error.message}")
+            try {
+                // Copy URI content to temporary file
+                val tempFile = File(context.cacheDir, "temp_import_${System.currentTimeMillis()}.csv")
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    tempFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
                 }
+                
+                // Import from temporary file
+                when (val result = importExpensesFromCsvUseCase(ImportExpensesFromCsvUseCase.Params(tempFile))) {
+                    is Result.Success -> {
+                        Logger.d("Imported ${result.data} expenses")
+                        onSuccess(result.data)
+                        tempFile.delete()
+                    }
+                    is Result.Failure -> {
+                        Logger.e("Import failed: ${result.error.message}")
+                        tempFile.delete()
+                    }
+                }
+            } catch (e: Exception) {
+                Logger.e("Import error: ${e.message}")
             }
         }
     }

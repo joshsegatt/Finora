@@ -48,7 +48,26 @@ class PreferencesManager @Inject constructor(
     
     val currency: Flow<String> = context.dataStore.data
         .map { preferences ->
-            preferences[CURRENCY] ?: "USD"
+            val saved = preferences[CURRENCY]
+            // Auto-detect on first use if not set or still default "USD"
+            if (saved == null || (saved == "USD" && java.util.Locale.getDefault().country.uppercase() != "US")) {
+                // Detect from device locale
+                val countryCode = java.util.Locale.getDefault().country.uppercase()
+                when (countryCode) {
+                    "GB", "UK" -> "GBP"
+                    "BR" -> "BRL"
+                    "CH" -> "CHF"
+                    "JP" -> "JPY"
+                    "CA" -> "CAD"
+                    "AU" -> "AUD"
+                    "IN" -> "INR"
+                    in listOf("AT", "BE", "CY", "EE", "FI", "FR", "DE", "GR", "IE", "IT",
+                              "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES") -> "EUR"
+                    else -> saved ?: "GBP" // Fallback to saved or GBP
+                }
+            } else {
+                saved ?: "GBP"
+            }
         }
     
     suspend fun setCurrency(currency: String) {

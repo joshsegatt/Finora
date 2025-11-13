@@ -3,6 +3,7 @@ package com.finora.features.expenses
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finora.core.Logger
+import com.finora.core.datastore.PreferencesManager
 import com.finora.domain.model.Expense
 import com.finora.domain.model.ExpenseCategory
 import com.finora.domain.usecase.DeleteExpenseUseCase
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ExpenseListViewModel @Inject constructor(
     private val getAllExpensesUseCase: GetAllExpensesUseCase,
-    private val deleteExpenseUseCase: DeleteExpenseUseCase
+    private val deleteExpenseUseCase: DeleteExpenseUseCase,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     
     private val _selectedCategory = MutableStateFlow<ExpenseCategory?>(null)
@@ -24,8 +26,9 @@ class ExpenseListViewModel @Inject constructor(
     val uiState: StateFlow<ExpenseListUiState> = combine(
         getAllExpensesUseCase.execute(Unit),
         _selectedCategory,
-        _searchQuery
-    ) { expenses, category, query ->
+        _searchQuery,
+        preferencesManager.currency
+    ) { expenses, category, query, currencyCode ->
         var filteredExpenses = expenses
         
         if (category != null) {
@@ -44,7 +47,8 @@ class ExpenseListViewModel @Inject constructor(
             expenses = filteredExpenses,
             selectedCategory = category,
             searchQuery = query,
-            totalAmount = filteredExpenses.sumOf { it.amount }
+            totalAmount = filteredExpenses.sumOf { it.amount },
+            currencyCode = currencyCode
         )
     }
         .stateIn(
@@ -73,5 +77,6 @@ data class ExpenseListUiState(
     val expenses: List<Expense> = emptyList(),
     val selectedCategory: ExpenseCategory? = null,
     val searchQuery: String = "",
-    val totalAmount: Double = 0.0
+    val totalAmount: Double = 0.0,
+    val currencyCode: String = "GBP"
 )

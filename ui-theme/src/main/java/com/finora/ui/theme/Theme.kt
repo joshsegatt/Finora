@@ -7,56 +7,57 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 /**
- * Esquema de Cores DARK - Deep Blue + Gold
- * Fundo Deep Blue profundo com acentos dourados
+ * Esquema de Cores DARK - Elegante e Legível
+ * Fundo escuro neutro com Deep Blue e Gold como acentos
  */
 private val DarkColorScheme = darkColorScheme(
-    // Primary - Deep Blue
-    primary = DeepBlue,
-    onPrimary = DarkTextPrimary,
-    primaryContainer = DarkBlue,
-    onPrimaryContainer = AccentGoldDark,
+    // Primary - Deep Blue vibrante para contraste
+    primary = Color(0xFF5C6BC0),  // Azul mais claro e vibrante
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFF3949AB),
+    onPrimaryContainer = Color(0xFFFFFFFF),
     
-    // Secondary - Gold para destaque
-    secondary = AccentGoldDark,
-    onSecondary = DarkBackground,
-    secondaryContainer = DarkSurfaceVariant,
-    onSecondaryContainer = DarkTextPrimary,
+    // Secondary - Gold brilhante
+    secondary = Color(0xFFFFD700),
+    onSecondary = Color(0xFF1A1A1A),
+    secondaryContainer = Color(0xFF424242),
+    onSecondaryContainer = Color(0xFFFFE082),
     
-    // Tertiary - Verde esmeralda
-    tertiary = AccentEmeraldDark,
-    onTertiary = DarkTextPrimary,
-    tertiaryContainer = DarkSurfaceVariant,
-    onTertiaryContainer = DarkTextPrimary,
+    // Tertiary - Verde esmeralda suave
+    tertiary = Color(0xFF66BB6A),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFF424242),
+    onTertiaryContainer = Color(0xFF81C784),
     
-    // Background & Surface
-    background = DarkBackground,
-    onBackground = DarkTextPrimary,
-    surface = DarkSurface,
-    onSurface = DarkTextPrimary,
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkTextSecondary,
+    // Background & Surface - Cinza escuro neutro (NÃO Deep Blue)
+    background = Color(0xFF121212),  // Cinza escuro padrão Material
+    onBackground = Color(0xFFE0E0E0),  // Texto claro
+    surface = Color(0xFF1E1E1E),  // Cards cinza
+    onSurface = Color(0xFFE0E0E0),  // Texto claro
+    surfaceVariant = Color(0xFF2C2C2C),
+    onSurfaceVariant = Color(0xFFB0B0B0),
     
     // Inversed
-    inverseSurface = LightSurface,
-    inverseOnSurface = LightTextPrimary,
+    inverseSurface = Color(0xFFFFFFFF),
+    inverseOnSurface = Color(0xFF1A1A1A),
     inversePrimary = DeepBlue,
     
     // Error
-    error = ErrorDark,
-    onError = DarkTextPrimary,
-    errorContainer = ErrorDark,
-    onErrorContainer = DarkTextPrimary,
+    error = Color(0xFFEF5350),
+    onError = Color(0xFFFFFFFF),
+    errorContainer = Color(0xFFB71C1C),
+    onErrorContainer = Color(0xFFFFCDD2),
     
     // Outline & Borders
-    outline = BorderDark,
-    outlineVariant = DarkSurfaceVariant,
-    scrim = OverlayDark
+    outline = Color(0xFF424242),
+    outlineVariant = Color(0xFF2C2C2C),
+    scrim = Color(0x80000000)
 )
 
 /**

@@ -32,6 +32,7 @@ import com.finora.domain.model.ReportPeriod
 import com.finora.ui.theme.AnimatedBarChart
 import com.finora.ui.theme.Finora3DPeriodTab
 import com.finora.ui.theme.getColor
+import com.finora.ui.theme.components.Elite3DTitle
 import java.io.File
 import kotlin.math.cos
 import kotlin.math.sin
@@ -45,44 +46,7 @@ fun ReportsScreen(
     val context = LocalContext.current
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Reports") },
-                actions = {
-                    var showMenu by remember { mutableStateOf(false) }
-                    
-                    IconButton(onClick = { showMenu = true }) {
-                        Icon(Icons.Default.MoreVert, "More options")
-                    }
-                    
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = { Text("Export CSV") },
-                            onClick = {
-                                showMenu = false
-                                viewModel.exportToCsv { csv ->
-                                    shareFile(context, csv, "expenses.csv", "text/csv")
-                                }
-                            },
-                            leadingIcon = { Icon(Icons.Default.Download, null) }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Export JSON") },
-                            onClick = {
-                                showMenu = false
-                                viewModel.exportToJson { json ->
-                                    shareFile(context, json, "expenses.json", "application/json")
-                                }
-                            },
-                            leadingIcon = { Icon(Icons.Default.Code, null) }
-                        )
-                    }
-                }
-            )
-        }
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Box(
             modifier = Modifier
@@ -96,20 +60,30 @@ fun ReportsScreen(
             } else if (uiState.report != null) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    // Título 3D Elite
+                    item {
+                        Elite3DTitle(
+                            text = "Reports",
+                            icon = Icons.Default.BarChart
+                        )
+                    }
+                    
                     item {
                         PeriodSelector(
                             selectedPeriod = uiState.selectedPeriod,
-                            onPeriodSelected = viewModel::loadReport
+                            onPeriodSelected = viewModel::loadReport,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
                     
                     item {
                         SummaryCard(
                             totalAmount = uiState.report!!.totalAmount,
-                            expenseCount = uiState.report!!.expenseCount
+                            expenseCount = uiState.report!!.expenseCount,
+                            currencyCode = uiState.currencyCode,
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
                     
@@ -123,7 +97,8 @@ fun ReportsScreen(
                                 ReportPeriod.MONTHLY -> 30 // Dias
                                 ReportPeriod.YEARLY -> 12 // Meses
                                 else -> 7
-                            }
+                            },
+                            modifier = Modifier.padding(horizontal = 16.dp)
                         )
                     }
                     
@@ -132,18 +107,24 @@ fun ReportsScreen(
                             Text(
                                 "Category Breakdown",
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 16.dp)
                             )
                         }
                         
                         item {
                             PieChart(
-                                data = uiState.report!!.categoryBreakdown.values.toList()
+                                data = uiState.report!!.categoryBreakdown.values.toList(),
+                                modifier = Modifier.padding(horizontal = 16.dp)
                             )
                         }
                         
                         items(uiState.report!!.categoryBreakdown.values.toList()) { stats ->
-                            CategoryStatsItem(stats)
+                            CategoryStatsItem(
+                                stats = stats,
+                                currencyCode = uiState.currencyCode,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                         }
                     }
                     
@@ -153,13 +134,15 @@ fun ReportsScreen(
                                 "Top Expenses",
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(top = 8.dp)
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                             )
                         }
                         
                         items(uiState.report!!.topExpenses.take(5)) { expense ->
                             Card(
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp)
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -181,7 +164,7 @@ fun ReportsScreen(
                                         )
                                     }
                                     Text(
-                                        CurrencyFormatter.format(expense.amount),
+                                        CurrencyFormatter.format(expense.amount, uiState.currencyCode),
                                         style = MaterialTheme.typography.titleMedium,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -250,6 +233,7 @@ fun PeriodSelector(
 fun SummaryCard(
     totalAmount: Double,
     expenseCount: Int,
+    currencyCode: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -270,7 +254,7 @@ fun SummaryCard(
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
             Text(
-                CurrencyFormatter.format(totalAmount),
+                CurrencyFormatter.format(totalAmount, currencyCode),
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -329,6 +313,7 @@ fun PieChart(
 @Composable
 fun CategoryStatsItem(
     stats: CategoryStats,
+    currencyCode: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -377,7 +362,7 @@ fun CategoryStatsItem(
             
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    CurrencyFormatter.format(stats.totalAmount),
+                    CurrencyFormatter.format(stats.totalAmount, currencyCode),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

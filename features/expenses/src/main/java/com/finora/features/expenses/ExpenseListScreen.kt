@@ -22,6 +22,7 @@ import com.finora.core.DateFormatter
 import com.finora.domain.model.Expense
 import com.finora.domain.model.ExpenseCategory
 import com.finora.ui.theme.*
+import com.finora.ui.theme.components.Elite3DTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,25 +33,6 @@ fun ExpenseListScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { 
-                    Text(
-                        "Expenses",
-                        style = MaterialTheme.typography.headlineSmall
-                    ) 
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                actions = {
-                    IconButton(onClick = { /* Search */ }) {
-                        Icon(Icons.Default.Search, "Search")
-                    }
-                }
-            )
-        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onNavigateToAddExpense,
@@ -71,6 +53,12 @@ fun ExpenseListScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            // Título 3D Elite
+            Elite3DTitle(
+                text = "Expenses",
+                icon = Icons.Default.Receipt
+            )
+            
             // Card de Total - Destacado e Elegante
             FinoraHighlightCard(
                 modifier = Modifier
@@ -88,7 +76,7 @@ fun ExpenseListScreen(
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Text(
-                        CurrencyFormatter.format(uiState.totalAmount),
+                        CurrencyFormatter.format(uiState.totalAmount, uiState.currencyCode),
                         style = MaterialTheme.typography.displaySmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
@@ -146,6 +134,7 @@ fun ExpenseListScreen(
                     items(uiState.expenses, key = { it.id }) { expense ->
                         ExpenseItem(
                             expense = expense,
+                            currencyCode = uiState.currencyCode,
                             onDelete = { viewModel.deleteExpense(expense.id) }
                         )
                     }
@@ -193,6 +182,7 @@ fun CategoryFilterRow(
 @Composable
 fun ExpenseItem(
     expense: Expense,
+    currencyCode: String,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -273,7 +263,7 @@ fun ExpenseItem(
                 verticalArrangement = Arrangement.spacedBy(FinoraSpacing.extraSmall)
             ) {
                 Text(
-                    text = CurrencyFormatter.format(expense.amount),
+                    text = CurrencyFormatter.format(expense.amount, currencyCode),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

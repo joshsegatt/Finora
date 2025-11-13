@@ -4,25 +4,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finora.core.Logger
 import com.finora.core.Result
+import com.finora.core.datastore.PreferencesManager
 import com.finora.domain.model.ExpenseReport
 import com.finora.domain.model.ReportPeriod
 import com.finora.domain.usecase.GenerateReportUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ReportsViewModel @Inject constructor(
-    private val generateReportUseCase: GenerateReportUseCase
+    private val generateReportUseCase: GenerateReportUseCase,
+    private val preferencesManager: PreferencesManager
 ) : ViewModel() {
     
-    private val _uiState = MutableStateFlow(ReportsUiState())
-    val uiState: StateFlow<ReportsUiState> = _uiState.asStateFlow()
+    private val _reportState = MutableStateFlow(ReportsInternalState())
+    
+    val uiState: StateFlow<ReportsUiState> = combine(
+        _reportState,
+        preferencesManager.currency
+    ) { state, currencyCode ->
+        ReportsUiState(
+            isLoading = state.isLoading,
+            selectedPeriod = state.selectedPeriod,
+            report = state.report,
+            trendData = state.trendData,
+            error = state.error,
+            currencyCode = currencyCode
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = ReportsUiState()
+    )
     
     init {
         loadReport(ReportPeriod.MONTHLY)
@@ -30,13 +46,13 @@ class ReportsViewModel @Inject constructor(
     
     fun loadReport(period: ReportPeriod) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, selectedPeriod = period) }
+            _reportState.update { it.copy(isLoading = true, selectedPeriod = period) }
             
             when (val result = generateReportUseCase(GenerateReportUseCase.Params(period))) {
                 is Result.Success -> {
                     Logger.d("Report generated successfully")
                     val trendData = generateTrendData(result.data, period)
-                    _uiState.update {
+                    _reportState.update {
                         it.copy(
                             isLoading = false,
                             report = result.data,
@@ -47,7 +63,7 @@ class ReportsViewModel @Inject constructor(
                 }
                 is Result.Failure -> {
                     Logger.e("Failed to generate report: ${result.error.message}")
-                    _uiState.update {
+                    _reportState.update {
                         it.copy(
                             isLoading = false,
                             error = result.error.message
@@ -76,7 +92,7 @@ class ReportsViewModel @Inject constructor(
     
     fun exportToCsv(onComplete: (String) -> Unit) {
         viewModelScope.launch {
-            val report = _uiState.value.report ?: return@launch
+            val report = _reportState.value.report ?: return@launch
             
             val csv = buildString {
                 appendLine("Date,Category,Description,Merchant,Amount")
@@ -94,7 +110,7 @@ class ReportsViewModel @Inject constructor(
     
     fun exportToJson(onComplete: (String) -> Unit) {
         viewModelScope.launch {
-            val report = _uiState.value.report ?: return@launch
+            val report = _reportState.value.report ?: return@launch
             
             val json = buildString {
                 appendLine("{")
@@ -125,10 +141,21 @@ class ReportsViewModel @Inject constructor(
     }
 }
 
+// Internal state (without currency)
+private data class ReportsInternalState(
+    val isLoading: Boolean = false,
+    val report: ExpenseReport? = null,
+    val selectedPeriod: ReportPeriod = ReportPeriod.MONTHLY,
+    val error: String? = null,
+    val trendData: List<Pair<String, Double>> = emptyList()
+)
+
+// Public UI state (with currency)
 data class ReportsUiState(
     val isLoading: Boolean = false,
     val report: ExpenseReport? = null,
     val selectedPeriod: ReportPeriod = ReportPeriod.MONTHLY,
     val error: String? = null,
-    val trendData: List<Pair<String, Double>> = emptyList() // Dados para o BarChart
+    val trendData: List<Pair<String, Double>> = emptyList(),
+    val currencyCode: String = "GBP"
 )
