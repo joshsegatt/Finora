@@ -65,6 +65,41 @@ GEMINI_API_KEY=your_key
 
 ---
 
+## 🔐 Building Release APK
+
+### Prerequisites
+1. Create a keystore (if you don't have one):
+   ```bash
+   keytool -genkey -v -keystore finora-release.keystore \
+     -alias finora -keyalg RSA -keysize 2048 -validity 10000
+   ```
+
+2. Create `keystore.properties` in project root:
+   ```bash
+   cp keystore.properties.example keystore.properties
+   # Edit keystore.properties with your actual credentials
+   ```
+
+3. **IMPORTANT**: Never commit `keystore.properties` or `*.keystore` files!
+
+### Build Commands
+```bash
+# Debug build (no keystore needed)
+./gradlew assembleDebug
+
+# Release build (requires keystore.properties)
+./gradlew assembleRelease
+```
+
+### CI/CD Setup
+For GitHub Actions or other CI systems, set these secrets:
+- `FINORA_KEYSTORE_BASE64`: Base64-encoded keystore file
+- `FINORA_STORE_PASSWORD`: Keystore password
+- `FINORA_KEY_PASSWORD`: Key password
+- `FINORA_KEY_ALIAS`: Key alias (default: finora)
+
+---
+
 ## 🔐 License & Copyright
 
 **© 2024-2025 Josh Segatt. All Rights Reserved.**

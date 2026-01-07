@@ -10,11 +10,13 @@
 # Java class files
 *.class
 
-# Keystore e senhas (NUNCA COMMITAR!)
+# Security: Keystores & Credentials (NUNCA COMMITAR!)
 *.keystore
 *.jks
 KEYSTORE-INFO-PRIVATE.md
 generate-keystore.ps1
+keystore.properties
+local.properties
 
 # Generated files
 bin/
@@ -55,6 +57,10 @@ render.experimental.xml
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
+
+# Build outputs that may contain secrets
+app/build/outputs/apk/release/
+app/build/outputs/bundle/release/
 
 # Android Profiling
 *.hprof
