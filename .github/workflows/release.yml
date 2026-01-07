@@ -1,0 +1,37 @@
+name: Build Release APK
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.FINORA_KEYSTORE_BASE64 }}" | base64 -d > finora-release.keystore
+      
+      - name: Build Release APK
+        env:
+          FINORA_STORE_PASSWORD: ${{ secrets.FINORA_STORE_PASSWORD }}
+          FINORA_KEY_PASSWORD: ${{ secrets.FINORA_KEY_PASSWORD }}
+          FINORA_KEY_ALIAS: ${{ secrets.FINORA_KEY_ALIAS }}
+          FINORA_KEYSTORE_PATH: ./finora-release.keystore
+        run: |
+          ./gradlew assembleRelease
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/*.apk

@@ -28,12 +28,56 @@ android {
 
     signingConfigs {
         create("release") {
-            // TODO: Configure com suas credenciais locais
-            // Veja KEYSTORE-INFO-PRIVATE.md (NÃO COMMITAR!)
-            storeFile = file("../finora-release.keystore")
-            storePassword = System.getenv("FINORA_STORE_PASSWORD") ?: "@Guga1010"
-            keyAlias = "finora"
-            keyPassword = System.getenv("FINORA_KEY_PASSWORD") ?: "@Guga1010"
+            // Read keystore path from local.properties or env
+            val keystorePropertiesFile = rootProject.file("keystore.properties")
+            val keystoreProperties = java.util.Properties()
+            
+            if (keystorePropertiesFile.exists()) {
+                keystoreProperties.load(java.io.FileInputStream(keystorePropertiesFile))
+            }
+            
+            val keystoreFile = file(
+                keystoreProperties.getProperty("storeFile") 
+                    ?: System.getenv("FINORA_KEYSTORE_PATH") 
+                    ?: "../finora-release.keystore"
+            )
+            
+            if (!keystoreFile.exists()) {
+                throw GradleException(
+                    """
+                    ❌ Keystore not found at: ${keystoreFile.absolutePath}
+                    
+                    To create a new keystore:
+                    keytool -genkey -v -keystore finora-release.keystore \
+                      -alias finora -keyalg RSA -keysize 2048 -validity 10000
+                    
+                    Then create keystore.properties with:
+                    storeFile=../finora-release.keystore
+                    storePassword=YOUR_STORE_PASSWORD
+                    keyAlias=finora
+                    keyPassword=YOUR_KEY_PASSWORD
+                    """.trimIndent()
+                )
+            }
+            
+            storeFile = keystoreFile
+            
+            // CRITICAL: No fallback values - fail fast if env vars missing
+            storePassword = keystoreProperties.getProperty("storePassword")
+                ?: System.getenv("FINORA_STORE_PASSWORD")
+                ?: throw GradleException(
+                    "❌ FINORA_STORE_PASSWORD not set. Add to keystore.properties or environment."
+                )
+            
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+                ?: System.getenv("FINORA_KEY_ALIAS")
+                ?: "finora"
+            
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+                ?: System.getenv("FINORA_KEY_PASSWORD")
+                ?: throw GradleException(
+                    "❌ FINORA_KEY_PASSWORD not set. Add to keystore.properties or environment."
+                )
         }
     }
 
